@@ -19,4 +19,8 @@ class Guru extends Model
     {
         return $this->belongsToMany(MataPelajaran::class, 'guru_mata_pelajaran');
     }
+
+    public function absensiSiswa() {
+    return $this->hasMany(AbsensiSiswa::class);
+}
 }

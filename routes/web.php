@@ -12,6 +12,9 @@ use App\Http\Controllers\UjianController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\RaportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KepalaSekolahDashboardController;
+use App\Http\Controllers\LaporanController;
 
 
 Route::get('/', function () {
@@ -73,7 +76,23 @@ Route::get('ujian/{ujian}/nilai', [UjianController::class, 'showNilai'])->name('
 Route::get('raport', [RaportController::class, 'index'])->name('raport.index');
 Route::get('raport/{siswa}', [RaportController::class, 'show'])->name('raport.show');
 
+//RUTE ABSEN SISWA
+Route::get('absensi/siswa', [AbsensiController::class, 'createSiswa'])->name('absensi.siswa.create');
+Route::post('absensi/siswa', [AbsensiController::class, 'storeSiswa'])->name('absensi.siswa.store');
+
 });
+
+//KEPALA SEKOLAH
+  // Prefix dan name ditambahkan agar rute lebih terorganisir
+    Route::middleware(['auth'])->prefix('kepala-sekolah')->name('kepala-sekolah.')->group(function () {
+        Route::get('dashboard', [KepalaSekolahDashboardController::class, 'index'])->name('dashboard');
+    });
+
+    Route::middleware(['auth'])->prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('absensi', [LaporanController::class, 'absensi'])->name('absensi.index');
+        // ### PERBAIKAN DI SINI: `Route.get` menjadi `Route::get` ###
+        Route::get('nilai', [LaporanController::class, 'nilai'])->name('nilai.index');
+    });
 
 
 // Redirect halaman utama ke halaman login jika belum login
