@@ -32,12 +32,11 @@ class AuthenticatedSessionController extends Controller
 
         // 2. Coba otentikasi pengguna
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            // Jika gagal, kembalikan ke form login dengan pesan error
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
-
+        
         // 3. Regenerasi session untuk keamanan
         $request->session()->regenerate();
 
@@ -45,9 +44,12 @@ class AuthenticatedSessionController extends Controller
 
         // 4. Redirect berdasarkan role
         if ($user->role === 'kepala_sekolah') {
-            return redirect()->intended(route('dashboard.kepala-sekolah'));
+            // ### PERBAIKAN DI SINI ###
+            // Mengarahkan ke rute yang benar agar controller dashboard dipanggil.
+            return redirect()->route('kepala-sekolah.dashboard');
         }
 
+        // Redirect default untuk guru
         return redirect()->intended(route('dashboard.guru'));
     }
 
